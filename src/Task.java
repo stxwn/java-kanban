@@ -1,11 +1,11 @@
 public class Task {
-    String name;
-    String  Description;
-    int id;
-    TaskStatus status;
+    private String name;
+    private String description;
+    private int id;
+    private TaskStatus status;
 
     public Task(String description, String name) {
-        Description = description;
+        this.description = description;
         this.name = name;
     }
 
@@ -14,7 +14,7 @@ public class Task {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public int getId() {
@@ -30,7 +30,7 @@ public class Task {
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public void setId(int id) {
@@ -45,7 +45,7 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "name='" + name + '\'' +
-                ", Description='" + Description + '\'' +
+                ", Description='" + description + '\'' +
                 ", id=" + id +
                 ", status=" + status +
                 '}';

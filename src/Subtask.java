@@ -1,5 +1,5 @@
 public class Subtask extends Task{
-    int epicId;
+    private int epicId;
 
     public Subtask(String name, String description, int epicId) {
         super(name, description);
@@ -18,9 +18,9 @@ public class Subtask extends Task{
     public String toString() {
         return "Subtask{" +
                 "epicId=" + epicId +
-                ", name='" + name + '\'' +
-                ", description='" + Description + '\'' +
-                ", status=" + status +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
                 '}';
     }
 }
