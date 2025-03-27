@@ -38,7 +38,7 @@ public class Main {
             System.out.println(epic.toString());
         }
 
-        System.out.println("Все подзадачи:");
+        System.out.println("AllSubtasks:");
         ArrayList<Subtask> subtasks = new ArrayList<>();
         for (Task task : allTasks) {
             if (task instanceof Subtask) {
