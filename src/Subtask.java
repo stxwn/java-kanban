@@ -5,9 +5,9 @@ public class Subtask extends Task{
     private Epic epic;
     private ArrayList<Long> subtaskIds = new ArrayList<>();
 
-    public Subtask(String name, String description, int epicId) {
+    public Subtask(String name, String description, long epicId) {
         super(name, description);
-        this.epicId = epicId;
+        this.epicId = (int) epicId;
     }
 
     public void addSubtaskId(long subtaskId) {
@@ -28,6 +28,9 @@ public class Subtask extends Task{
     }
 
     public void setEpicId(int epicId) {
+        if (epicId == this.getId()) {
+            throw new IllegalArgumentException("ошибка");
+        }
         this.epicId = epicId;
     }
 
