@@ -5,13 +5,11 @@ public class InMemoryTaskManager implements TaskManager {
     private int nextId = 1;
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Task> historyMap = new HashMap<>();
-    private ArrayList<Task> historyList = new ArrayList<>();
     private HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
     }
-
 
     @Override
     public Task getTaskById(long id) {
@@ -36,17 +34,15 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(long id) {
         Subtask subtask = (Subtask) tasks.get(id);
         if (subtask != null) {
-            historyManager.add(subtask);
+            historyManager.add(subtask); // Добавляем сабтаск в историю через historyManager
         }
         return subtask;
     }
 
-
     @Override
     public ArrayList<Task> getHistory() {
-        return new ArrayList<>(historyList);
+        return historyManager.getHistory();
     }
-
 
     @Override
     public long createTask(Task task) {
@@ -102,8 +98,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subtasks;
     }
-
-
 
     @Override
     public boolean updateTask(Task task) {
@@ -189,7 +183,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return result;
     }
-
 
     @Override
     public void updateEpicStatus(Epic epic) {
