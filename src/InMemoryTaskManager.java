@@ -4,7 +4,6 @@ import java.util.HashMap;
 public class InMemoryTaskManager implements TaskManager {
     private int nextId = 1;
     private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Task> historyMap = new HashMap<>();
     private HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
@@ -65,10 +64,13 @@ public class InMemoryTaskManager implements TaskManager {
         int newId = nextId++;
         subtask.setId(newId);
         tasks.put(newId, subtask);
+
         Epic epic = subtask.getEpic();
         if (epic != null) {
             epic.addSubtaskId(newId);
+            updateEpicStatus(epic);
         }
+
         return newId;
     }
 
