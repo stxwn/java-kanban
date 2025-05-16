@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final long MAX_HISTORY_SIZE = 10;
+    private final int maxHistorySize = 10;
     private Node<Task> head;
     private Node<Task> tail;
     private Map<Long, Node<Task>> taskNodes;
