@@ -1,11 +1,10 @@
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-public class Tests {
+public class Test {
 
     private TaskManager taskManager;
     private HistoryManager historyManager;
@@ -17,7 +16,7 @@ public class Tests {
         taskManager.clearAllTasks();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testCreateAndGetTask() {
         Task task = new Task("описание", "Название задачи");
         long taskId = taskManager.createTask(task);
@@ -25,7 +24,7 @@ public class Tests {
         assertEquals(rTask, task, "Полученная задача должна совпадать с оригинальной");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testInvalidSubtaskIdsRemovedFromEpic() {
         Epic epic = new Epic("Описание эпика", "Название эпика");
         long epicId = taskManager.createEpic(epic);
@@ -41,7 +40,7 @@ public class Tests {
     }
 
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testDeleteTask() {
         Task task = new Task("описание", "Название задачи");
         long taskId = taskManager.createTask(task);
@@ -55,7 +54,7 @@ public class Tests {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testSetterImpactOnTaskManager() {
         TaskManager taskManager = Managers.getDefault();
         Task task = new Task("Исходное описание", "Исходное название");
@@ -74,7 +73,7 @@ public class Tests {
     }
 
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testUpdatingTaskFieldsThroughManager() {
         TaskManager taskManager = Managers.getDefault();
         Task task = new Task("Исходное описание", "Исходное название");
@@ -89,7 +88,7 @@ public class Tests {
         assertEquals("Новое описание задачи", updatedTask.getDescription(), "Описание задачи должно быть обновлено");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testCreateAndGetEpic() {
         Epic epic = new Epic("описание", "Название эпика");
         long epicId = taskManager.createEpic(epic);
@@ -98,7 +97,7 @@ public class Tests {
     }
 
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testCreateAndGetSubtask() {
         Epic epic = new Epic("описание", "Название эпика");
         long epicId = taskManager.createEpic(epic);
@@ -108,7 +107,7 @@ public class Tests {
         assertEquals(rSubtask, subtask, "Полученная подзадача должна совпадать с оригинальной");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testUpdateEpicStatus() {
         Epic epic = new Epic("описание", "Название эпика");
         long epicId = taskManager.createEpic(epic);
@@ -127,7 +126,7 @@ public class Tests {
     }
 
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testHistoryAdditions() {
         Task task = new Task("описание", "Название задачи");
         long taskId = taskManager.createTask(task);
@@ -136,7 +135,7 @@ public class Tests {
         assertTrue(history.contains(task), "Задача должна присутствовать в истории");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testHistoryRemoval() {
         Task task = new Task("описание", "Название задачи");
         long taskId = taskManager.createTask(task);
@@ -147,7 +146,7 @@ public class Tests {
     }
 
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testSubtaskStatusChange() {
         Epic epic = new Epic("описание", "Название эпика");
         long epicId = taskManager.createEpic(epic);
@@ -161,7 +160,7 @@ public class Tests {
         assertEquals(updatedSubtask.getStatus(), TaskStatus.DONE, "Статус подзадачи должен быть изменен");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testEqualityById() {
         Task task1 = new Task("описание", "Название задачи 1");
         Task task2 = new Task("описание", "Название задачи 2");
@@ -170,7 +169,7 @@ public class Tests {
         assertEquals(task1, task2, "Экземпляры Task с одинаковыми ID должны быть равны");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testUniqueId() {
         Task task1 = new Task("описание", "Название задачи 1");
         Task task2 = new Task("описание", "Название задачи 2");
@@ -179,7 +178,7 @@ public class Tests {
         assertNotEquals(taskId1, taskId2, "ID задач должны быть уникальны");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testDataDeletion() {
         Epic epic = new Epic("описание", "Название эпика");
         long epicId = taskManager.createEpic(epic);
