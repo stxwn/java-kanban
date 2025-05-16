@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-public class Test {
+public class test {
 
     private TaskManager taskManager;
     private HistoryManager historyManager;
