@@ -75,8 +75,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
 
-
-
     private void linkFirst(Node<Task> node) {
         if (head == null) {
             head = tail = node;

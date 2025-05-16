@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
     private long epicId;
     private Epic epic;
     private ArrayList<Long> subtaskIds = new ArrayList<>();
