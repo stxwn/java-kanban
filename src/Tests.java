@@ -1,9 +1,11 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 
-public class Tests{
+public class Tests {
 
     private TaskManager taskManager;
     private HistoryManager historyManager;
@@ -143,8 +145,6 @@ public class Tests{
         List<Task> history = historyManager.getHistory();
         assertFalse(history.contains(task), "Задача должна быть удалена из истории");
     }
-
-
 
 
     @Test
