@@ -1,3 +1,7 @@
+package test;
+
+import main.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +26,7 @@ public class Tests {
         Task task = new Task("описание", "Название задачи");
         long taskId = taskManager.createTask(task);
         Task rTask = taskManager.getTaskById(taskId);
-        assertEquals(rTask, task, "Полученная задача должна совпадать с оригинальной");
+        Assertions.assertEquals(rTask, task, "Полученная задача должна совпадать с оригинальной");
     }
 
     @Test
@@ -36,8 +40,8 @@ public class Tests {
         long subtask2Id = taskManager.createSubtask(subtask2);
         taskManager.deleteSubtask(subtask1Id);
         Epic updatedEpic = taskManager.getEpicById(epicId);
-        assertFalse(updatedEpic.getSubtaskIds().contains(subtask1Id), "Удалённая подзадача не должна быть в списке активных подзадач эпика");
-        assertTrue(updatedEpic.getSubtaskIds().contains(subtask2Id), "Оставшаяся подзадача должна быть активной в эпике");
+        Assertions.assertFalse(updatedEpic.getSubtaskIds().contains(subtask1Id), "Удалённая подзадача не должна быть в списке активных подзадач эпика");
+        Assertions.assertTrue(updatedEpic.getSubtaskIds().contains(subtask2Id), "Оставшаяся подзадача должна быть активной в эпике");
     }
 
 
@@ -66,11 +70,11 @@ public class Tests {
         task.setStatus(TaskStatus.IN_PROGRESS);
 
         Task updatedTask = taskManager.getTaskById(taskId);
-        assertEquals("Новоназванная задача", updatedTask.getName(), "Имя задачи должно быть обновлено");
-        assertEquals("Новое описание задачи", updatedTask.getDescription(), "Описание задачи должно быть обновлено");
-        assertEquals(TaskStatus.IN_PROGRESS, updatedTask.getStatus(), "Статус задачи должен быть обновлен");
+        Assertions.assertEquals("Новоназванная задача", updatedTask.getName(), "Имя задачи должно быть обновлено");
+        Assertions.assertEquals("Новое описание задачи", updatedTask.getDescription(), "Описание задачи должно быть обновлено");
+        Assertions.assertEquals(TaskStatus.IN_PROGRESS, updatedTask.getStatus(), "Статус задачи должен быть обновлен");
 
-        assertSame(task, updatedTask, "Объект задачи в менеджере должен быть тем же самым объектом");
+        Assertions.assertSame(task, updatedTask, "Объект задачи в менеджере должен быть тем же самым объектом");
     }
 
 
@@ -85,8 +89,8 @@ public class Tests {
         taskManager.updateTask(task);
 
         Task updatedTask = taskManager.getTaskById(taskId);
-        assertEquals("Новоназванная задача", updatedTask.getName(), "Имя задачи должно быть обновлено");
-        assertEquals("Новое описание задачи", updatedTask.getDescription(), "Описание задачи должно быть обновлено");
+        Assertions.assertEquals("Новоназванная задача", updatedTask.getName(), "Имя задачи должно быть обновлено");
+        Assertions.assertEquals("Новое описание задачи", updatedTask.getDescription(), "Описание задачи должно быть обновлено");
     }
 
     @Test
@@ -94,7 +98,7 @@ public class Tests {
         Epic epic = new Epic("описание", "Название эпика");
         long epicId = taskManager.createEpic(epic);
         Epic rEpic = taskManager.getEpicById(epicId);
-        assertEquals(rEpic, epic, "Полученный эпик должен совпадать с оригинальным");
+        Assertions.assertEquals(rEpic, epic, "Полученный эпик должен совпадать с оригинальным");
     }
 
 
@@ -105,7 +109,7 @@ public class Tests {
         Subtask subtask = new Subtask("описание", "Название подзадачи", epicId);
         long subtaskId = taskManager.createSubtask(subtask);
         Subtask rSubtask = taskManager.getSubtaskById(subtaskId);
-        assertEquals(rSubtask, subtask, "Полученная подзадача должна совпадать с оригинальной");
+        Assertions.assertEquals(rSubtask, subtask, "Полученная подзадача должна совпадать с оригинальной");
     }
 
     @Test
@@ -123,7 +127,7 @@ public class Tests {
         taskManager.updateSubtask(subtask2);
 
         Epic updatedEpic = taskManager.getEpicById(epicId);
-        assertEquals(updatedEpic.getStatus(), TaskStatus.IN_PROGRESS, "Статус эпика должен быть IN_PROGRESS");
+        Assertions.assertEquals(updatedEpic.getStatus(), TaskStatus.IN_PROGRESS, "Статус эпика должен быть IN_PROGRESS");
     }
 
 
@@ -158,7 +162,7 @@ public class Tests {
         taskManager.updateSubtask(subtask);
 
         Subtask updatedSubtask = taskManager.getSubtaskById(subtaskId);
-        assertEquals(updatedSubtask.getStatus(), TaskStatus.DONE, "Статус подзадачи должен быть изменен");
+        Assertions.assertEquals(updatedSubtask.getStatus(), TaskStatus.DONE, "Статус подзадачи должен быть изменен");
     }
 
     @Test
@@ -167,7 +171,7 @@ public class Tests {
         Task task2 = new Task("описание", "Название задачи 2");
         task1.setId(1);
         task2.setId(1);
-        assertEquals(task1, task2, "Экземпляры Task с одинаковыми ID должны быть равны");
+        Assertions.assertEquals(task1, task2, "Экземпляры Task с одинаковыми ID должны быть равны");
     }
 
     @Test
@@ -189,7 +193,7 @@ public class Tests {
         taskManager.createSubtask(subtask2);
 
         taskManager.deleteEpic(epicId);
-        assertTrue(taskManager.getAllSubtasks().isEmpty(), "Подзадачи должны быть удалены вместе с эпиком");
+        Assertions.assertTrue(taskManager.getAllSubtasks().isEmpty(), "Подзадачи должны быть удалены вместе с эпиком");
     }
 
 }
