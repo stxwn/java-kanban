@@ -6,10 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final int maxHistorySize = 10;
     private Node<Task> head;
     private Node<Task> tail;
     private Map<Long, Node<Task>> taskNodes;
+
+    private static class Node<T> {
+        T value;
+        Node<T> prev;
+        Node<T> next;
+
+        public Node(T value) {
+            this.value = value;
+        }
+    }
 
     public InMemoryHistoryManager() {
         taskNodes = new HashMap<Long, Node<Task>>();
@@ -25,18 +34,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             tail = newNode;
         }
     }
-
-
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> list = new ArrayList<>();
-        Node<Task> current = head;
-        while (current != null) {
-            list.add(current.value);
-            current = current.next;
-        }
-        return list;
-    }
-
 
     @Override
     public void add(Task task) {
