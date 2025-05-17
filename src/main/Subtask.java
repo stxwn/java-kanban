@@ -1,13 +1,15 @@
+package main;
+
 import java.util.ArrayList;
 
-public class Subtask extends Task{
-    private int epicId;
+public class Subtask extends Task {
+    private long epicId;
     private Epic epic;
     private ArrayList<Long> subtaskIds = new ArrayList<>();
 
     public Subtask(String name, String description, long epicId) {
         super(name, description);
-        this.epicId = (int) epicId;
+        this.epicId = (long) epicId;
     }
 
     public void addSubtaskId(long subtaskId) {
@@ -27,7 +29,7 @@ public class Subtask extends Task{
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
+    public void setEpicId(long epicId) {
         if (epicId == this.getId()) {
             throw new IllegalArgumentException("ошибка");
         }
@@ -43,6 +45,4 @@ public class Subtask extends Task{
                 ", status=" + getStatus() +
                 '}';
     }
-
-
 }
