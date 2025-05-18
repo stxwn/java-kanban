@@ -1,9 +1,11 @@
+package main;
+
 import java.util.Objects;
 
 public class Task {
     private String name;
     private String description;
-    private int id;
+    private long id;
     private TaskStatus status;
 
     public Task(String description, String name) {
@@ -19,7 +21,7 @@ public class Task {
         return description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -35,7 +37,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
