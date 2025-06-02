@@ -12,6 +12,11 @@ public class Subtask extends Task {
         this.epicId = (long) epicId;
     }
 
+    public Subtask(Long id, String title, String description, TaskStatus status, Long epicId) {
+        super(id, title, description, status);
+        this.epicId = epicId;
+    }
+
     public void addSubtaskId(long subtaskId) {
         subtaskIds.add(subtaskId);
     }
@@ -44,5 +49,10 @@ public class Subtask extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
                 '}';
+    }
+
+    @Override
+    public TypeOfTask getType() {
+        return null;
     }
 }

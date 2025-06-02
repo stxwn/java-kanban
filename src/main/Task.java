@@ -5,12 +5,29 @@ import java.util.Objects;
 public class Task {
     private String name;
     private String description;
-    private long id;
-    private TaskStatus status;
+    long id;
+    TaskStatus status;
 
     public Task(String description, String name) {
         this.description = description;
         this.name = name;
+        this.status = TaskStatus.NEW;
+    }
+
+    public Task(Long id, String title, String description, TaskStatus status) {
+    }
+
+
+    public static Task fromString(String line) {
+        String[] parts = line.split(",");
+        if (parts.length < 4) {
+            throw new IllegalArgumentException("Некорректный формат строки задачи: " + line);
+        }
+        Long id = Long.parseLong(parts[0]);
+        String name = parts[1];
+        String description = parts[2];
+        TaskStatus status = parts[3].equalsIgnoreCase("null") ? TaskStatus.NEW : TaskStatus.valueOf(parts[3]);
+        return new Task(description, name);
     }
 
     public String getName() {
@@ -64,11 +81,10 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", Description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return id + "," + name + "," + description + "," + status;
+    }
+
+    public TypeOfTask getType() {
+        return null;
     }
 }

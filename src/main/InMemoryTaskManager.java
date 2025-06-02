@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
     private long nextId = 1L;
-    private HashMap<Long, Task> tasks = new HashMap<>();
+    HashMap<Long, Task> tasks = new HashMap<>();
     private HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
