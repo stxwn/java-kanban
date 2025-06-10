@@ -1,8 +1,5 @@
-package tests;
+package main;
 
-import main.FileBackedTaskManager;
-import main.InMemoryHistoryManager;
-import main.Task;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +30,7 @@ public class FileBackedTaskManagerTests {
     public void testSavingAndLoadingEmptyFile() {
         manager.save();
 
-        FileBackedTaskManager restoredManager = FileBackedTaskManager.loadDataFromFile(tempFile, new InMemoryHistoryManager());
+        FileBackedTaskManager restoredManager = FileBackedTaskManager.loadFromFile(tempFile, new InMemoryHistoryManager());
 
         assertTrue(restoredManager.getAllTasks().isEmpty(), "Список задач должен быть пустым");
         assertTrue(restoredManager.getAllEpics().isEmpty(), "Список эпиков должен быть пустым");
