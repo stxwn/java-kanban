@@ -33,7 +33,7 @@ public class FileBackedTaskManagerTests {
     public void testSavingAndLoadingEmptyFile() {
         manager.save();
 
-        FileBackedTaskManager restoredManager = FileBackedTaskManager.loadFromFile(tempFile, new InMemoryHistoryManager());
+        FileBackedTaskManager restoredManager = FileBackedTaskManager.loadDataFromFile(tempFile, new InMemoryHistoryManager());
 
         assertTrue(restoredManager.getAllTasks().isEmpty(), "Список задач должен быть пустым");
         assertTrue(restoredManager.getAllEpics().isEmpty(), "Список эпиков должен быть пустым");

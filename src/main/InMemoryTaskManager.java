@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private long nextId = 1L;
-    HashMap<Long, Task> tasks = new HashMap<>();
+    protected long nextId = 1L;
+    protected HashMap<Long, Task> tasks = new HashMap<>();
     private HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {

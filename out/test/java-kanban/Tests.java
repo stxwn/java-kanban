@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import main.*;
 import org.junit.jupiter.api.Assertions;
@@ -7,23 +7,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
 import java.util.List;
 
 public class Tests {
 
     private TaskManager taskManager;
     private HistoryManager historyManager;
-    private File tempFile;
-    private FileBackedTaskManager manager;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() {
         taskManager = Managers.getDefault();
         historyManager = Managers.getDefaultHistory();
         taskManager.clearAllTasks();
-        tempFile = File.createTempFile("test-tasks", ".csv");
-        manager = new FileBackedTaskManager(tempFile.getAbsolutePath(), new InMemoryHistoryManager());
     }
 
     @Test
@@ -49,19 +44,6 @@ public class Tests {
         Assertions.assertTrue(updatedEpic.getSubtaskIds().contains(subtask2Id), "Оставшаяся подзадача должна быть активной в эпике");
     }
 
-    @AfterEach
-    public void cleanup() {
-        tempFile.delete();
-    }
-
-    @Test
-    public void testSavingAndLoadingEmptyFile() {
-        manager.save();
-        FileBackedTaskManager restoredManager = FileBackedTaskManager.loadFromFile(tempFile, new InMemoryHistoryManager());
-        assertTrue(restoredManager.getAllTasks().isEmpty(), "Список задач должен быть пустым");
-        assertTrue(restoredManager.getAllEpics().isEmpty(), "Список эпиков должен быть пустым");
-        assertTrue(restoredManager.getAllSubtasks().isEmpty(), "Список подзадач должен быть пустым");
-    }
 
     @Test
     public void testDeleteTask() {

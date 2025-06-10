@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Task {
     private String name;
     private String description;
-    long id;
-    TaskStatus status;
+    private long id;
+    private TaskStatus status;
 
     public Task(String description, String name) {
         this.description = description;

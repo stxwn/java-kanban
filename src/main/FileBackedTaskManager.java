@@ -29,12 +29,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
+    protected void setNextId(long id) {
+        this.nextId = id;
+    }
+
     private void loadDataFromFile() {
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8)) {
             String line;
+            long maxId = 0;  // Track the maximum ID found in the file
+
             while ((line = reader.readLine()) != null) {
                 Task task = Task.fromString(line);
                 tasks.put(task.getId(), task);
+
+                // Update maxId if current task's ID is larger
+                if (task.getId() > maxId) {
+                    maxId = task.getId();
+                }
+            }
+
+            if (maxId > 0) {
+                setNextId(maxId + 1);
             }
         } catch (IOException | IllegalArgumentException ex) {
             System.out.println("Ошибка при загрузке данных из файла: " + ex.getMessage());
@@ -110,19 +125,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file, HistoryManager historyManager) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file.getAbsolutePath(), historyManager);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println("Processing line: " + line);
-                Task task = Task.fromString(line);
-                manager.tasks.put(task.getId(), task);
-            }
-        } catch (IOException | IllegalArgumentException ex) {
-            System.out.println("Ошибка при загрузке данных из файла: " + ex.getMessage());
-        }
-        return manager;
-    }
+
 }
 
