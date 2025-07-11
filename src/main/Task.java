@@ -5,14 +5,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
-    protected Long id;  // Изменили на Long для поддержки null
+    protected Long id;
     protected String name;
     protected String description;
     protected TaskStatus status;
     protected LocalDateTime startTime;
     protected Duration duration;
 
-    // Основной конструктор
     public Task(Long id, String name, String description,
                 TaskStatus status, LocalDateTime startTime, Duration duration) {
         this.id = id;
@@ -23,7 +22,6 @@ public class Task {
         this.duration = duration != null ? duration : Duration.ZERO;
     }
 
-    // Упрощенный конструктор
     public Task(String name, String description, TaskStatus status) {
         this(null, name, description, status, null, null);
     }
@@ -37,7 +35,6 @@ public class Task {
         return startTime != null ? startTime.plus(duration) : null;
     }
 
-    // Геттеры и сеттеры
     public String getName() {
         return name;
     }
@@ -86,12 +83,10 @@ public class Task {
         this.duration = Duration.ofMinutes(durationMinutes);
     }
 
-    // Методы для работы с временем
     public boolean hasTime() {
         return startTime != null && !duration.isZero();
     }
 
-    // Методы сравнения и преобразования
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
