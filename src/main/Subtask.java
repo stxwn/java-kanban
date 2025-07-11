@@ -1,58 +1,62 @@
 package main;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Subtask extends Task {
     private long epicId;
-    private Epic epic;
-    private ArrayList<Long> subtaskIds = new ArrayList<>();
 
-    public Subtask(String name, String description, long epicId) {
-        super(name, description);
-        this.epicId = (long) epicId;
-    }
-
-    public Subtask(Long id, String title, String description, TaskStatus status, Long epicId) {
-        super(id, title, description, status);
+    public Subtask(String name, String description, TaskStatus status, long epicId) {
+        super(name, description, status, null, null);
         this.epicId = epicId;
     }
 
-    public void addSubtaskId(long subtaskId) {
-        subtaskIds.add(subtaskId);
+    public Subtask(Long id, String name, String description, TaskStatus status,
+                   long epicId, LocalDateTime startTime, Duration duration) {
+        super(id, name, description, status, startTime, duration);
+        this.epicId = epicId;
     }
 
-    public Epic getEpic() {
-        return epic;
-    }
-
-
-    public ArrayList<Long> getSubtaskIds() {
-        return subtaskIds;
-    }
 
     public long getEpicId() {
         return epicId;
     }
 
     public void setEpicId(long epicId) {
-        if (epicId == this.getId()) {
-            throw new IllegalArgumentException("ошибка");
-        }
         this.epicId = epicId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Subtask subtask = (Subtask) o;
+        return epicId == subtask.epicId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), epicId);
     }
 
     @Override
     public String toString() {
         return "Subtask{" +
-                "epicId=" + epicId +
+                "id=" + getId() +
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
+                ", epicId=" + epicId +
+                ", startTime=" + getStartTime() +
+                ", duration=" + getDuration() +
+                ", endTime=" + getEndTime() +
                 '}';
     }
 
     @Override
     public TypeOfTask getType() {
-        return null;
+        return TypeOfTask.SUBTASK;
     }
 }
