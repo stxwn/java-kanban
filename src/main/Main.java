@@ -1,21 +1,34 @@
 package main;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
 
-        long task1Id = taskManager.createTask(new Task("Описание задачи 1", "Задача 1"));
-        long task2Id = taskManager.createTask(new Task("Описание задачи 2", "Задача 2"));
+        LocalDateTime startTime = LocalDateTime.now();
+        Duration duration = Duration.ofHours(1);
+        TaskStatus status = TaskStatus.NEW;
 
-        long epicWithSubtasksId = taskManager.createEpic(new Epic("Описание эпика с подзадачами", "Эпик с подзадачами"));
-        long epicWithoutSubtasksId = taskManager.createEpic(new Epic("Описание эпика без подзадач", "Эпик без подзадач"));
+        var task1Id = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", status));
+        var task2Id = taskManager.createTask(new Task("Задача 2", "Описание задачи 2", status));
 
-        long subtask1Id = taskManager.createSubtask(new Subtask("Описание подзадачи 1", "Подзадача 1", epicWithSubtasksId));
-        long subtask2Id = taskManager.createSubtask(new Subtask("Описание подзадачи 2", "Подзадача 2", epicWithSubtasksId));
-        long subtask3Id = taskManager.createSubtask(new Subtask("Описание подзадачи 3", "Подзадача 3", epicWithSubtasksId));
+        var epicWithSubtasksId = taskManager.createEpic(new Epic("Эпик с подзадачами", "Описание эпика"));
+        var epicWithoutSubtasksId = taskManager.createEpic(new Epic("Эпик без подзадач", "Описание эпика"));
 
+        var subtask1Id = taskManager.createSubtask(
+                new Subtask("Подзадача 1", "Описание подзадачи 1", status, epicWithSubtasksId)
+        );
+        var subtask2Id = taskManager.createSubtask(
+                new Subtask("Подзадача 2", "Описание подзадачи 2", status, epicWithSubtasksId
+                )
+        );
+        var subtask3Id = taskManager.createSubtask(
+                new Subtask("Подзадача 3", "Описание подзадачи 3", status, epicWithSubtasksId
+                )
+        );
 
         taskManager.getTaskById(task1Id);
         taskManager.getTaskById(task2Id);
@@ -26,24 +39,24 @@ public class Main {
         taskManager.getTaskById(subtask3Id);
         taskManager.getTaskById(task1Id);
 
-        System.out.println("История просмотров:");
-        List<Task> history = taskManager.getHistory();
-        for (Task task : history) {
-            System.out.println(task);
-        }
+        printHistory("История просмотров:", taskManager.getHistory());
 
         taskManager.deleteTask(task1Id);
-        System.out.println("История после удаления задачи 1:");
-        history = taskManager.getHistory();
-        for (Task task : history) {
-            System.out.println(task);
-        }
+        printHistory("История после удаления задачи 1:", taskManager.getHistory());
 
         taskManager.deleteEpic(epicWithSubtasksId);
-        System.out.println("История после удаления эпика с подзадачами:");
-        history = taskManager.getHistory();
-        for (Task task : history) {
-            System.out.println(task);
+        printHistory("История после удаления эпика с подзадачами:", taskManager.getHistory());
+    }
+
+    private static void printHistory(String message, List<Task> history) {
+        System.out.println(message);
+        if (history.isEmpty()) {
+            System.out.println("История пуста");
+        } else {
+            history.stream()
+                    .map(Task::toString)
+                    .forEach(System.out::println);
         }
+        System.out.println();
     }
 }
