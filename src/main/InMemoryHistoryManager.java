@@ -21,36 +21,22 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public InMemoryHistoryManager() {
-        taskNodes = new HashMap<Long, Node<Task>>();
-    }
-
-    public void linkLast(Task task) {
-        Node<Task> newNode = new Node<>(task);
-        if (tail == null) {
-            head = tail = newNode;
-        } else {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
-        }
+        taskNodes = new HashMap<>();
     }
 
     @Override
     public void add(Task task) {
         long taskId = task.getId();
-        Node<Task> existingNode = taskNodes.get(taskId);
-
-
-        if (existingNode != null) {
-            removeNode(existingNode);
+        // Удаляем существующую ноду, если задача уже есть в истории
+        if (taskNodes.containsKey(taskId)) {
+            removeNode(taskNodes.get(taskId));
         }
 
-
+        // Создаем новую ноду и добавляем в конец списка
         Node<Task> newNode = new Node<>(task);
-        linkFirst(newNode);
+        linkLast(newNode);
         taskNodes.put(taskId, newNode);
     }
-
 
     @Override
     public void remove(long id) {
@@ -60,7 +46,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             taskNodes.remove(id);
         }
     }
-
 
     @Override
     public List<Task> getHistory() {
@@ -73,17 +58,15 @@ public class InMemoryHistoryManager implements HistoryManager {
         return result;
     }
 
-
-    private void linkFirst(Node<Task> node) {
-        if (head == null) {
+    private void linkLast(Node<Task> node) {
+        if (tail == null) {
             head = tail = node;
         } else {
-            node.next = head;
-            head.prev = node;
-            head = node;
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
     }
-
 
     private void removeNode(Node<Task> node) {
         if (node.prev != null) {

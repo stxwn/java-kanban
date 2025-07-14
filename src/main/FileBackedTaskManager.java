@@ -3,53 +3,114 @@ package main;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private final String filePath;
+    private final File file;
 
-    public FileBackedTaskManager(String filePath, HistoryManager historyManager) {
+    public FileBackedTaskManager(File file, HistoryManager historyManager) {
         super(historyManager);
-        this.filePath = filePath;
-        loadDataFromFile();
+        this.file = file;
+        loadFromFile();
+    }
+
+
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file, Managers.getDefaultHistory());
+        manager.loadFromFile();
+        return manager;
     }
 
     public void save() {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            List<String> lines = new ArrayList<>();
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+            writer.write("id,type,name,status,description,startTime,duration,epic\n");
+
             for (Task task : getAllTasks()) {
-                lines.add(task.toString());
+                writer.write(taskToString(task));
+                writer.newLine();
             }
-            writer.write(String.join("\n", lines));
-        } catch (IOException ex) {
-            throw new ManagerSaveException("Ошибка сохранения данных в файл " + filePath);
+
+            for (Epic epic : getAllEpics()) {
+                writer.write(taskToString(epic));
+                writer.newLine();
+            }
+
+            for (Subtask subtask : getAllSubtasks()) {
+                writer.write(taskToString(subtask));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка сохранения в файл", e);
         }
     }
 
-    private void loadDataFromFile() {
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8)) {
+    private String taskToString(Task task) {
+        String[] fields = {
+                String.valueOf(task.getId()),
+                task.getType().name(),
+                task.getName(),
+                task.getStatus().name(),
+                task.getDescription(),
+                task.getStartTime() != null ? task.getStartTime().toString() : "null",
+                String.valueOf(task.getDuration().toMinutes()),
+                task instanceof Subtask ? String.valueOf(((Subtask) task).getEpicId()) : ""
+        };
+        return String.join(",", fields);
+    }
+
+    private void loadFromFile() {
+        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+            reader.readLine(); // Пропускаем заголовок
+
             String line;
-            long maxId = 0;
-
             while ((line = reader.readLine()) != null) {
-                Task task = Task.fromString(line);
-                tasks.put(task.getId(), task);
-
-                if (task.getId() > maxId) {
-                    maxId = task.getId();
+                Task task = fromString(line);
+                if (task != null) {
+                    tasks.put(task.getId(), task);
+                    updateNextId(task.getId());
                 }
             }
-
-            if (maxId > 0) {
-                setNextId(maxId + 1);
-            }
-        } catch (IOException | IllegalArgumentException ex) {
-            System.out.println("Ошибка при загрузке данных из файла: " + ex.getMessage());
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка загрузки из файла", e);
         }
     }
 
+    private Task fromString(String value) {
+        String[] parts = value.split(",");
+        if (parts.length < 8) return null;
+
+        long id = Long.parseLong(parts[0]);
+        TypeOfTask type = TypeOfTask.valueOf(parts[1]);
+        String name = parts[2];
+        TaskStatus status = TaskStatus.valueOf(parts[3]);
+        String description = parts[4];
+        LocalDateTime startTime = "null".equals(parts[5]) ? null : LocalDateTime.parse(parts[5]);
+        Duration duration = Duration.ofMinutes(Long.parseLong(parts[6]));
+
+        switch (type) {
+            case TASK:
+                Task task = new Task(name, description, status, startTime, duration);
+                return task;
+            case EPIC:
+                Epic epic = new Epic(id, name, description, status);
+                return epic;
+            case SUBTASK:
+                long epicId = Long.parseLong(parts[7]);
+                Subtask subtask = new Subtask(id, name, description, status, epicId, startTime, duration);
+                return subtask;
+            default:
+                return null;
+        }
+    }
+
+    private void updateNextId(long id) {
+        if (id >= nextId) {
+            nextId = id + 1;
+        }
+    }
+
+    // Переопределенные методы для автоматического сохранения
     @Override
     public long createTask(Task task) {
         long id = super.createTask(task);
@@ -71,61 +132,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return id;
     }
 
-    @Override
-    public boolean updateTask(Task task) {
-        boolean updated = super.updateTask(task);
-        if (updated) save();
-        return updated;
-    }
 
-    @Override
-    public boolean updateEpic(Epic epic) {
-        boolean updated = super.updateEpic(epic);
-        if (updated) save();
-        return updated;
-    }
-
-    @Override
-    public boolean updateSubtask(Subtask subtask) {
-        boolean updated = super.updateSubtask(subtask);
-        if (updated) save();
-        return updated;
-    }
-
-    @Override
-    public boolean deleteTask(long id) {
-        boolean deleted = super.deleteTask(id);
-        if (deleted) save();
-        return deleted;
-    }
-
-    @Override
-    public boolean deleteEpic(long epicId) {
-        boolean deleted = super.deleteEpic(epicId);
-        if (deleted) save();
-        return deleted;
-    }
-
-    @Override
-    public boolean deleteSubtask(long subtaskId) {
-        boolean deleted = super.deleteSubtask(subtaskId);
-        if (deleted) save();
-        return deleted;
-    }
-
-    @Override
-    public void clearAllTasks() {
-        super.clearAllTasks();
-        save();
-    }
-
-    public static FileBackedTaskManager loadFromFile(File file, HistoryManager historyManager) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file.getAbsolutePath(), historyManager);
-        manager.loadDataFromFile();
-        return manager;
-    }
-
-    protected void setNextId(long id) {
-        this.nextId = id;
-    }
 }

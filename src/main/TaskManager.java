@@ -1,6 +1,6 @@
 package main;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     long createTask(Task task);
@@ -9,13 +9,13 @@ public interface TaskManager {
 
     long createSubtask(Subtask subtask);
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
-    ArrayList<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks();
 
     Task getTaskById(long id);
 
@@ -37,7 +37,19 @@ public interface TaskManager {
 
     void clearAllTasks();
 
-    ArrayList<Subtask> getSubtasksForEpic(long epicId);
+    void clearAllEpics();
+
+    void clearAllSubtasks();
+
+    List<Subtask> getSubtasksForEpic(long epicId);
 
     void updateEpicStatus(Epic epic);
+
+    void addToPrioritized(Task task);
+
+    void removeFromPrioritized(long id);
+
+    List<Task> getPrioritizedTasks();
+
+    boolean isTimeOverlap(Task newTask);
 }
