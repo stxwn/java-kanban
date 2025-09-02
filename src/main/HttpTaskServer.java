@@ -28,7 +28,6 @@ public class HttpTaskServer {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    // Встроенный адаптер для LocalDateTime
     private static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
@@ -48,7 +47,6 @@ public class HttpTaskServer {
         }
     }
 
-    // Класс обработчика, реализующий HttpHandler
     private static class TaskHandler implements HttpHandler {
         private final TaskManager taskManager;
         private final Gson gson;
