@@ -338,10 +338,7 @@ public class HttpTaskServer {
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .setPrettyPrinting()
-                .create();
+        this.gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
         server = HttpServer.create(new InetSocketAddress(PORT), 0);
         server.createContext("/", new TaskHandler(taskManager, gson));
