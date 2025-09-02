@@ -2,6 +2,7 @@ package main;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -270,11 +271,17 @@ public class TaskHandler {
     // Внутренние классы для ответов
     private static class IdResponse {
         private final long id;
-        public IdResponse(long id) { this.id = id; }
+
+        public IdResponse(long id) {
+            this.id = id;
+        }
     }
 
     private static class ErrorResponse {
         private final String error;
-        public ErrorResponse(String error) { this.error = error; }
+
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
     }
 }
