@@ -1,4 +1,6 @@
-package main;
+package main.model;
+
+import main.managers.TaskManager;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

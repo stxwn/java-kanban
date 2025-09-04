@@ -1,4 +1,4 @@
-package main;
+package main.managers;
 
 import java.io.IOException;
 

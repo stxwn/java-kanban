@@ -1,4 +1,8 @@
-package main;
+package main.managers;
+
+import main.model.Epic;
+import main.model.Subtask;
+import main.model.Task;
 
 import java.util.List;
 

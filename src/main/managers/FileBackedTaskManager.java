@@ -1,4 +1,6 @@
-package main;
+package main.managers;
+
+import main.model.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
