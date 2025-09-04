@@ -1,4 +1,9 @@
-import main.*;
+import main.managers.HistoryManager;
+import main.managers.InMemoryHistoryManager;
+import main.model.Epic;
+import main.model.Subtask;
+import main.model.Task;
+import main.model.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,13 +22,13 @@ public class HistoryManagerTest {
     public void setUp() {
         historyManager = new InMemoryHistoryManager();
 
-        task = new Task("Test Task", "Test Description", TaskStatus.NEW);
+        task = new Task("Test Task", "Test Description", TaskStatus.NEW, LocalDateTime.now(), 30);
         task.setId(1);
 
         epic = new Epic("Test Epic", "Test Epic Description");
         epic.setId(2);
 
-        subtask = new Subtask("Test Subtask", "Test Description", TaskStatus.NEW, 2);
+        subtask = new Subtask("Test Subtask", "Test Description", TaskStatus.NEW, 2, LocalDateTime.now(), 30);
         subtask.setId(3);
     }
 

@@ -1,4 +1,10 @@
-import main.*;
+import main.managers.InMemoryHistoryManager;
+import main.managers.InMemoryTaskManager;
+import main.managers.TaskManager;
+import main.model.Epic;
+import main.model.Subtask;
+import main.model.Task;
+import main.model.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +20,7 @@ public class TaskManagerTest {
 
     @Test
     public void testCreateTask() {
-        Task task = new Task("Test Task", "Test Description", TaskStatus.NEW);
+        Task task = new Task("Test Task", "Test Description", TaskStatus.NEW, LocalDateTime.now(), 30);
         long taskId = taskManager.createTask(task);
         assertEquals(task, taskManager.getTaskById(taskId));
     }
@@ -24,7 +30,7 @@ public class TaskManagerTest {
         Epic epic = new Epic("Test Epic", "Test Epic Description");
         long epicId = taskManager.createEpic(epic);
         Subtask subtask = new Subtask("Test Subtask", "Test Subtask Description",
-                TaskStatus.NEW, epicId);
+                TaskStatus.NEW, epicId, LocalDateTime.now(), 30);
         long subtaskId = taskManager.createSubtask(subtask);
 
         assertEquals(subtask, taskManager.getSubtaskById(subtaskId));
@@ -33,7 +39,7 @@ public class TaskManagerTest {
 
     @Test
     public void testUpdateTaskStatus() {
-        Task task = new Task("Test Task", "Test Description", TaskStatus.NEW);
+        Task task = new Task("Test Task", "Test Description", TaskStatus.NEW, LocalDateTime.now(), 30);
         long taskId = taskManager.createTask(task);
         task.setStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateTask(task);
@@ -42,7 +48,7 @@ public class TaskManagerTest {
 
     @Test
     public void testDeleteTask() {
-        Task task = new Task("Test Task", "Test Description", TaskStatus.NEW);
+        Task task = new Task("Test Task", "Test Description", TaskStatus.NEW, LocalDateTime.now(), 30);
         long taskId = taskManager.createTask(task);
         taskManager.deleteTask(taskId);
         assertNull(taskManager.getTaskById(taskId));

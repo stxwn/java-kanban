@@ -1,4 +1,4 @@
-package main;
+package main.model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -22,13 +22,16 @@ public class Task {
         this.duration = duration != null ? duration : Duration.ZERO;
     }
 
-    public Task(String name, String description, TaskStatus status) {
+    public Task(String name, String description, TaskStatus status, LocalDateTime now, int i) {
         this(null, name, description, status, null, null);
     }
 
     public Task(String name, String description, TaskStatus status,
                 LocalDateTime startTime, Duration duration) {
         this(null, name, description, status, startTime, duration);
+    }
+
+    public Task(String testTask, String testDescription, TaskStatus taskStatus) {
     }
 
     public LocalDateTime getEndTime() {

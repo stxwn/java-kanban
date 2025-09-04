@@ -1,4 +1,4 @@
-package main;
+package main.model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Subtask extends Task {
     private long epicId;
 
-    public Subtask(String name, String description, TaskStatus status, long epicId) {
+    public Subtask(String name, String description, TaskStatus status, long epicId, LocalDateTime now, int i) {
         super(name, description, status, null, null);
         this.epicId = epicId;
     }

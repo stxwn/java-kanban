@@ -1,7 +1,11 @@
-package main;
+package main.handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import main.managers.TaskManager;
+import main.model.Epic;
+import main.model.Subtask;
+import main.model.Task;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,6 +57,13 @@ public class TaskHandler {
                         sendResponse(exchange, "Not Found", 404);
                     }
             }
+        } catch (IllegalArgumentException e) {
+            // Обработка пересечения по времени
+            if (e.getMessage().contains("пересекается") || e.getMessage().contains("пересечение")) {
+                sendError(exchange, e.getMessage(), 406);
+            } else {
+                sendError(exchange, "Bad Request: " + e.getMessage(), 400);
+            }
         } catch (Exception e) {
             sendError(exchange, "Internal Server Error: " + e.getMessage(), 500);
         }
@@ -66,8 +77,12 @@ public class TaskHandler {
                 break;
             case "POST":
                 Task newTask = parseBody(exchange, Task.class);
-                long taskId = taskManager.createTask(newTask);
-                sendJsonResponse(exchange, new IdResponse(taskId), 201);
+                try {
+                    long taskId = taskManager.createTask(newTask);
+                    sendJsonResponse(exchange, new IdResponse(taskId), 201);
+                } catch (IllegalArgumentException e) {
+                    handleTimeOverlapError(exchange, e);
+                }
                 break;
             case "DELETE":
                 taskManager.clearAllTasks();
@@ -92,10 +107,14 @@ public class TaskHandler {
             case "POST":
                 Task updatedTask = parseBody(exchange, Task.class);
                 updatedTask.setId(id);
-                if (taskManager.updateTask(updatedTask)) {
-                    sendResponse(exchange, "", 200);
-                } else {
-                    sendError(exchange, "Task not found", 404);
+                try {
+                    if (taskManager.updateTask(updatedTask)) {
+                        sendResponse(exchange, "", 200);
+                    } else {
+                        sendError(exchange, "Task not found", 404);
+                    }
+                } catch (IllegalArgumentException e) {
+                    handleTimeOverlapError(exchange, e);
                 }
                 break;
             case "DELETE":
@@ -118,8 +137,12 @@ public class TaskHandler {
                 break;
             case "POST":
                 Subtask newSubtask = parseBody(exchange, Subtask.class);
-                long subtaskId = taskManager.createSubtask(newSubtask);
-                sendJsonResponse(exchange, new IdResponse(subtaskId), 201);
+                try {
+                    long subtaskId = taskManager.createSubtask(newSubtask);
+                    sendJsonResponse(exchange, new IdResponse(subtaskId), 201);
+                } catch (IllegalArgumentException e) {
+                    handleTimeOverlapError(exchange, e);
+                }
                 break;
             case "DELETE":
                 taskManager.clearAllSubtasks();
@@ -144,10 +167,14 @@ public class TaskHandler {
             case "POST":
                 Subtask updatedSubtask = parseBody(exchange, Subtask.class);
                 updatedSubtask.setId(id);
-                if (taskManager.updateSubtask(updatedSubtask)) {
-                    sendResponse(exchange, "", 200);
-                } else {
-                    sendError(exchange, "Subtask not found", 404);
+                try {
+                    if (taskManager.updateSubtask(updatedSubtask)) {
+                        sendResponse(exchange, "", 200);
+                    } else {
+                        sendError(exchange, "Subtask not found", 404);
+                    }
+                } catch (IllegalArgumentException e) {
+                    handleTimeOverlapError(exchange, e);
                 }
                 break;
             case "DELETE":
@@ -159,6 +186,14 @@ public class TaskHandler {
                 break;
             default:
                 sendError(exchange, "Method Not Allowed", 405);
+        }
+    }
+
+    private void handleTimeOverlapError(HttpExchange exchange, IllegalArgumentException e) throws IOException {
+        if (e.getMessage().contains("пересекается") || e.getMessage().contains("пересечение")) {
+            sendError(exchange, e.getMessage(), 406);
+        } else {
+            sendError(exchange, "Bad Request: " + e.getMessage(), 400);
         }
     }
 
@@ -268,7 +303,6 @@ public class TaskHandler {
         return Long.parseLong(parts[parts.length - 1]);
     }
 
-    // Внутренние классы для ответов
     private static class IdResponse {
         private final long id;
 

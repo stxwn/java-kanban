@@ -1,4 +1,4 @@
-package main;
+package main.managers;
 
 public class Managers {
     private static TaskManager taskManager;

@@ -1,5 +1,12 @@
 package main;
 
+import main.managers.Managers;
+import main.managers.TaskManager;
+import main.model.Epic;
+import main.model.Subtask;
+import main.model.Task;
+import main.model.TaskStatus;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,22 +19,22 @@ public class Main {
         Duration duration = Duration.ofHours(1);
         TaskStatus status = TaskStatus.NEW;
 
-        var task1Id = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", status));
-        var task2Id = taskManager.createTask(new Task("Задача 2", "Описание задачи 2", status));
+        var task1Id = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", status, LocalDateTime.now(), 30));
+        var task2Id = taskManager.createTask(new Task("Задача 2", "Описание задачи 2", status, LocalDateTime.now(), 30));
 
         var epicWithSubtasksId = taskManager.createEpic(new Epic("Эпик с подзадачами", "Описание эпика"));
         var epicWithoutSubtasksId = taskManager.createEpic(new Epic("Эпик без подзадач", "Описание эпика"));
 
         var subtask1Id = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", status, epicWithSubtasksId)
+                new Subtask("Подзадача 1", "Описание подзадачи 1", status, epicWithSubtasksId, LocalDateTime.now(), 30)
         );
         var subtask2Id = taskManager.createSubtask(
-                new Subtask("Подзадача 2", "Описание подзадачи 2", status, epicWithSubtasksId
-                )
+                new Subtask("Подзадача 2", "Описание подзадачи 2", status, epicWithSubtasksId,
+                        LocalDateTime.now(), 30)
         );
         var subtask3Id = taskManager.createSubtask(
-                new Subtask("Подзадача 3", "Описание подзадачи 3", status, epicWithSubtasksId
-                )
+                new Subtask("Подзадача 3", "Описание подзадачи 3", status, epicWithSubtasksId,
+                        LocalDateTime.now(), 30)
         );
 
         taskManager.getTaskById(task1Id);

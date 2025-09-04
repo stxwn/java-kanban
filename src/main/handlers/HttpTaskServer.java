@@ -1,4 +1,4 @@
-package main;
+package main.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,6 +8,11 @@ import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import main.managers.Managers;
+import main.managers.TaskManager;
+import main.model.Epic;
+import main.model.Subtask;
+import main.model.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +30,7 @@ public class HttpTaskServer {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    private static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
+    public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
         @Override
@@ -43,6 +48,7 @@ public class HttpTaskServer {
             return dateString != null && !dateString.equals("null") ? LocalDateTime.parse(dateString, formatter) : null;
         }
     }
+
 
     private static class TaskHandler implements HttpHandler {
         private final TaskManager taskManager;
@@ -356,7 +362,7 @@ public class HttpTaskServer {
         server.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Shutting down server...");
+            System.out.println("Shutting down server");
             server.stop();
         }));
     }
